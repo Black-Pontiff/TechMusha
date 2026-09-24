@@ -1,0 +1,55 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: techmusha
+      POSTGRES_PASSWORD: techmusha
+      POSTGRES_DB: techmusha
+    volumes: [pgdata:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U techmusha"]
+      interval: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes: [redisdata:/data]
+
+  api:
+    build: ./api
+    env_file: .env
+    depends_on:
+      db: { condition: service_healthy }
+      redis: { condition: service_started }
+    ports: ["8000:8000"]
+    volumes:
+      - storage:/data/storage
+      - ./api:/app
+    command: >
+      sh -c "python -m app.bootstrap && uvicorn app.main:app --host 0.0.0.0 --port 8000"
+
+  sandbox:
+    build: ./sandbox
+    ports: ["9000:9000"]
+    # NOTE: docker socket is required to spawn sibling containers.
+    # In production, replace with gVisor (runsc) and a dedicated sandbox node.
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      SANDBOX_TOKEN: ${SANDBOX_TOKEN:-dev-token}
+
+  web:
+    build:
+      context: ./web
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:8000
+    ports: ["3000:3000"]
+    depends_on: [api]
+
+volumes:
+  pgdata:
+  redisdata:
+  storage:

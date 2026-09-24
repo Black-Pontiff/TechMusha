@@ -1,0 +1,54 @@
+techmusha/
+├── docker-compose.yml
+├── .env.example
+├── README.md
+├── api/
+│ ├── requirements.txt
+│ ├── Dockerfile
+│ ├── app/
+│ │ ├── main.py
+│ │ ├── config.py
+│ │ ├── db.py
+│ │ ├── models.py
+│ │ ├── schemas.py
+│ │ ├── security.py
+│ │ ├── deps.py
+│ │ └── routers/
+│ │ ├── auth.py
+│ │ ├── courses.py
+│ │ ├── enrollments.py
+│ │ ├── documents.py
+│ │ ├── sandbox.py
+│ │ ├── reviews.py
+│ │ ├── certificates.py
+│ │ └── admin.py
+│ └── seeds/seed.py
+├── sandbox/
+│ ├── requirements.txt
+│ ├── Dockerfile
+│ └── runner.py
+└── web/
+├── package.json
+├── next.config.js
+├── tailwind.config.js
+├── postcss.config.js
+├── tsconfig.json
+├── public/
+│ ├── manifest.json
+│ └── sw.js
+├── lib/
+│ ├── api.ts
+│ ├── offline.ts
+│ └── i18n.ts
+├── components/
+│ └── Nav.tsx
+└── app/
+├── layout.tsx
+├── globals.css
+├── page.tsx
+├── login/page.tsx
+├── courses/page.tsx
+├── courses/[slug]/page.tsx
+├── library/page.tsx
+├── sandbox/page.tsx
+└── profile/page.tsx
